@@ -4,6 +4,7 @@ import showPasswordIcon from '../assets/Images/showPasswordIcon.png'
 import hidePasswordIcon from '../assets/Images/hiddenPasswordIcon.png'
 import setPasswordIcon from '../assets/Images/setPasswordIcon.png'
 import userIcon from '../assets/Images/usericon.png'
+import axios from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -31,18 +32,27 @@ function Signup() {
         }
         else {
             setError('Password must have 1 uppercase, 1 lowercase, 1 number and 1 special character.')
-            return false
-        }
-    }
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        if (password !== confirmPassword) {
-            setError('Password does not match')
             return;
         }
-        if(regexValidation){
-            setError('');
-            
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            if(!email || !name || !password || !confirmPassword){
+                setError('All fields are required')
+                return;
+            }
+            if (password !== confirmPassword) {
+                setError('Password does not match')
+                return;
+            }
+            const response = await axios.post('http://localhost:5000/signup', { email, name, password })    
+        } catch (error) {
+            if(error.response.data.error){
+               setError(error.response.data.error)
+            }else{
+                setError('')
+            }
         }
     }
     return (
@@ -53,24 +63,24 @@ function Signup() {
                     <div className='flex  flex-col mt-5 px-3'>
                         <div className="mt-5 w-full shadow-lg bg-white p-3 flex outline-none rounded-3xl">
                             <div className='flex items-center'><img className='w-4 h-4' src={userIcon} /></div>
-                            <input type="text" onChange={(e) => setName(e.target.value)} className="w-full px-5 outline-none " placeholder="Enter your Full Name" required />
+                            <input type="text" onChange={(e) => setName(e.target.value)} className="w-full px-5 outline-none " placeholder="Enter your Full Name"  />
                         </div>
                         <div className="mt-5 w-full shadow-lg bg-white p-3 flex outline-none rounded-3xl">
                             <div className='flex items-center'><img className='w-4 h-4' src={gmailIcon} /></div>
-                            <input type="email" onChange={(e) => setEmail(e.target.value)} className="w-full px-5 outline-none " placeholder="Enter your Email" required />
+                            <input type="email" onChange={(e) => setEmail(e.target.value)} className="w-full px-5 outline-none " placeholder="Enter your Email"  />
                         </div>
                         <div className="mt-5 w-full shadow-lg bg-white p-3 flex outline-none rounded-3xl">
                             <div className='flex items-center'><img className='w-4 h-4' src={setPasswordIcon} /></div>
-                            <input type={showPassword ? "text" : "password"} onBlur={password ? () => regexValidation(password) : null} onChange={(e) => setPassword(e.target.value)} className={`w-full px-5 outline-none `} placeholder="Enter your Password" required />
+                            <input type={showPassword ? "text" : "password"} onBlur={password ? () => regexValidation(password) : null} onChange={(e) => setPassword(e.target.value)} className={`w-full px-5 outline-none `} placeholder="Enter your Password"  />
                             <div className=' flex items-center'><img className='w-4 h-4 cursor-pointer' src={showPassword ? hidePasswordIcon : showPasswordIcon} title={showPassword ? "Hide Password" : "Show Password"} onClick={handleShowPassword} /></div>
                         </div>
                         <div className="mt-5 w-full shadow-lg bg-white p-3 flex outline-none rounded-3xl">
                             <div className='flex items-center'><img className='w-4 h-4' src={passwordIcon} /></div>
-                            <input type={showConfirmPassword ? "text" : "password"} onChange={(e) => setConfirmPassword(e.target.value)} className={`w-full px-5 outline-none `} placeholder="Confirm your Password" required />
+                            <input type={showConfirmPassword ? "text" : "password"} onChange={(e) => setConfirmPassword(e.target.value)} className={`w-full px-5 outline-none `} placeholder="Confirm your Password"  />
                             <div className=' flex items-center'><img className='w-4 h-4 cursor-pointer' src={showConfirmPassword ? hidePasswordIcon : showPasswordIcon} title={showConfirmPassword ? "Hide Password" : "Show Password"} onClick={handleShowConfirmPassword} /></div>
                         </div>
                     </div>
-                    <div className='flex   text-center justify-center  '><p className='text-red-500 text-xs px-3 sm:w-[50%] md:w-[50%] lg:w-[30%] absolute sm:text-sm'>{error}</p></div>
+                    <div className='flex   text-center justify-center  '><p className='text-red-500 mt-1 text-xs px-3 sm:w-[50%] md:w-[50%] lg:w-[30%] absolute sm:text-sm'>{error}</p></div>
                     <div className=" flex  justify-center mt-5">
                         <button type='submit' className="bg-slate-600 text-white p-2 w-24 active:scale-95 rounded-3xl mt-5">Sign Up</button>
                     </div>

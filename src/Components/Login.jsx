@@ -4,6 +4,7 @@ import showPasswordIcon from '../assets/Images/showPasswordIcon.png'
 import hidePasswordIcon from '../assets/Images/hiddenPasswordIcon.png'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -16,12 +17,21 @@ function Login() {
     }
 
 
-
-    const handleSubmit = (e) => {
+// function handling the login form
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        if(!email || !password){
-            setError('All fields are required')
-            return
+        try {
+            if(!email || !password){
+                setError('All fields are required')
+                return
+            }
+            setError('')
+            const response = await axios.post('http://localhost:5000/login', { email, password })
+            localStorage.setItem('token', response.data.token);
+        } catch (error) {
+            if(error.response.data.error){
+                setError(error.response.data.error)
+            }
         }
     }
     return (
@@ -29,7 +39,7 @@ function Login() {
             <div className='h-screen flex justify-center bg-gray-200 items-center '>
                 <form onSubmit={handleSubmit} className='w-full mx-2.5  sm:w-1/2 md:w-2/4 lg:w-2/6 rounded-3xl p-5 px-0 sm:px-2 backdrop:blur-md bg-opacity-25  shadow-2xl  bg-slate-800 h-[60%]'>
                     <h1 className='text-4xl text-center font-semibold text-white'>Login</h1>
-                    <div className='flex  flex-col gap-5 mt-5 px-3'>
+                    <div className='flex  flex-col sm:gap-5 mt-5 px-3'>
                         <div className="mt-5 w-full shadow-lg bg-white p-3 flex outline-none rounded-3xl">
                             <div className='flex items-center'><img className='w-5 h-5' src={gmailIcon} /></div>
                             <input type="text" onChange={(e) => setEmail(e.target.value)} className="w-full px-5 outline-none " placeholder="Enter your Email"  />
