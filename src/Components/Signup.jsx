@@ -6,7 +6,9 @@ import setPasswordIcon from '../assets/Images/setPasswordIcon.png'
 import userIcon from '../assets/Images/usericon.png'
 import axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { setToken } from '../Redux/Slice'
 
 function Signup() {
     const [email, setEmail] = useState('');
@@ -16,6 +18,8 @@ function Signup() {
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -46,7 +50,11 @@ function Signup() {
                 setError('Password does not match')
                 return;
             }
-            const response = await axios.post('http://localhost:5000/signup', { email, name, password })    
+            const response = await axios.post('http://localhost:5000/signup', { email, name, password });
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+            dispatch(setToken(token));
+            navigate('/home');
         } catch (error) {
             if(error.response.data.error){
                setError(error.response.data.error)

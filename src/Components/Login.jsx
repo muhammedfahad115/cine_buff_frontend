@@ -3,14 +3,18 @@ import passwordIcon from '../assets/Images/password.png'
 import showPasswordIcon from '../assets/Images/showPasswordIcon.png'
 import hidePasswordIcon from '../assets/Images/hiddenPasswordIcon.png'
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { setToken } from '../Redux/Slice'
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -27,7 +31,11 @@ function Login() {
             }
             setError('')
             const response = await axios.post('http://localhost:5000/login', { email, password })
-            localStorage.setItem('token', response.data.token);
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+            dispatch(setToken(token));
+            navigate('/home');
+            
         } catch (error) {
             if(error.response.data.error){
                 setError(error.response.data.error)
