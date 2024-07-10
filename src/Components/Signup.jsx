@@ -54,7 +54,7 @@ function Signup() {
             const token = response.data.token;
             localStorage.setItem('token', token);
             dispatch(setToken(token));
-            navigate('/home');
+            navigate('/');
         } catch (error) {
             if(error.response.data.error){
                setError(error.response.data.error)
