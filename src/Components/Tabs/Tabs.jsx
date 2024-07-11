@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect} from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import './Tabs.css'
 import { myContext } from '../../Context/Context';
@@ -15,7 +15,6 @@ function Tabs() {
         setActiveTab('user');
       }
     }, [location.pathname]);
-    console.log(activeTab)
   return (
     <>
         <div className="w-full px-2 sm:px-3 bg-[#646669]">
@@ -37,7 +36,6 @@ function Tabs() {
         </div>
         </Link>
       </div>
-    
     </div>
     </>
   )

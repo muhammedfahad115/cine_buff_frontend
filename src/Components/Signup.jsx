@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
 import { setToken } from '../Redux/Slice'
+import Spinner from './Spinner/Spinner'
 
 function Signup() {
     const [email, setEmail] = useState('');
@@ -20,6 +21,8 @@ function Signup() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+    
 
     const handleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -50,6 +53,8 @@ function Signup() {
                 setError('Password does not match')
                 return;
             }
+            setError('')
+            setLoading(true)
             const response = await axios.post('http://localhost:5000/signup', { email, name, password });
             const token = response.data.token;
             localStorage.setItem('token', token);
@@ -61,6 +66,8 @@ function Signup() {
             }else{
                 setError('')
             }
+        } finally {
+            setLoading(false)
         }
     }
     return (
@@ -90,7 +97,7 @@ function Signup() {
                     </div>
                     <div className='flex   text-center justify-center  '><p className='text-red-500 mt-1 text-xs px-3 sm:w-[50%] md:w-[50%] lg:w-[30%] absolute sm:text-sm'>{error}</p></div>
                     <div className=" flex  justify-center mt-5">
-                        <button type='submit' className="bg-slate-600 text-white p-2 w-24 active:scale-95 rounded-3xl mt-5">Sign Up</button>
+                        <button type='submit' className="bg-slate-600 text-white p-2 w-24 active:scale-95 rounded-3xl mt-5">{loading ? <Spinner width='w-[25px]' /> : "Signup"}</button>
                     </div>
                     <div className='flex justify-center mt-1 '><p className='text-white text-sm'>Already have an account ? <span className='underline text-gray-500 font-semibold'><Link to="/login">Login</Link></span></p></div>
                 </form>
