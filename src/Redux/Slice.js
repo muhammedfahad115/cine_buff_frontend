@@ -12,4 +12,5 @@ const slice = createSlice({
   },
 });
 export const { setToken } = slice.actions;
+export const selectToken = (state) => state.auth.token;
 export default slice.reducer;
