@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import userIcon from '../assets/Images/usericon.png'
-import axiosInstance from '../Api/Axios';
-import Spinner from './Spinner/Spinner';
+import userIcon from '../../assets/Images/usericon.png'
+import axiosInstance from '../../Api/Axios';
+import Spinner from '../Spinner/Spinner';
 function Profile() {
   const [userDetails, setUserDetails] = useState(null);
 
