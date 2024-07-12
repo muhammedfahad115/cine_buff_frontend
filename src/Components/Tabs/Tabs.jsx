@@ -17,7 +17,7 @@ function Tabs() {
     }, [location.pathname]);
   return (
     <>
-        <div className="w-full px-2 sm:px-3 bg-[#646669]">
+        <div className="w-full px-2 sm:px-3 bg-[#4c4e50]">
       <div className="flex space-x-4 border-b border-yellow-500 ">
         <Link to="/">
         <div 

@@ -8,7 +8,7 @@ function Home() {
     <>
         <Header />
         <Tabs />
-        <div className="bg-[#646669] px-2 py-5 h-screen"><Outlet/></div>
+        <div className="bg-[#46484a] px-2 py-5 min-h-screen"><Outlet/></div>
     </>
   )
 }
