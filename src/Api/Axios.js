@@ -1,5 +1,4 @@
 import axios from "axios";
-import {logout} from '../Context/Context'
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:5000',
 })
@@ -24,8 +23,8 @@ axiosInstance.interceptors.response.use((response) => {
 }, (error) => {
     if (error.response && error.response.status === 403) {
         console.log('Forbidden error:', error.response.data);
-        localStorage.removeItem('token');
-        logout();
+        localStorage.clear();
+        window.location.reload();
     }
     
     return Promise.reject(error);

@@ -9,7 +9,7 @@ import Context from '../Context/Context'
 import Auth from '../AuthGuard/Auth'
 import AddRationales from '../Components/Admin/AddRationales'
 import ShowUsers from '../Components/Admin/ShowUsers'
-import ShowRationales from '../Components/Admin/ShowRationales'
+import ShowRationales from '../Components/Admin/ShowRationale/ShowRationales'
 
 function UserRoutes() {
   return (

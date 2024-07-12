@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import axiosInstance from '../../Api/Axios';
+import { useEffect, useState, useRef } from 'react';
+import axiosInstance from '../../../Api/Axios';
+import './ShowRationale.css';
 
 function ShowRationales() {
   const [rationales, setRationales] = useState([]);
@@ -7,10 +8,30 @@ function ShowRationales() {
   const [totalPages, setTotalPages] = useState(0);
   const [editingRationale, setEditingRationale] = useState(null);
   const [expandedRationale, setExpandedRationale] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showAllSuggestions, setShowAllSuggestions] = useState(false);
+  const [showSeeMore, setShowSeeMore] = useState(true);
+  const [noResults, setNoResults] = useState(false);
+
+  const suggestionBoxRef = useRef(null);
 
   useEffect(() => {
     fetchRationales(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (suggestionBoxRef.current && !suggestionBoxRef.current.contains(event.target)) {
+        setSuggestions([]);
+        setNoResults(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const fetchRationales = async (page) => {
     try {
@@ -58,8 +79,83 @@ function ShowRationales() {
     return text.slice(0, limit) + '...';
   };
 
+  const handleSearchChange = async (e) => {
+    const searchTerm = e.target.value;
+    setSearchTerm(searchTerm);
+
+    if (searchTerm) {
+      try {
+        const response = await axiosInstance.get(`/searchrationales?query=${searchTerm}`);
+        const newData = response.data.rationales;
+
+        if (newData.length === 0) {
+          setNoResults(true);
+          setSuggestions([]);
+        } else {
+          setNoResults(false);
+          setSuggestions(newData);
+        }
+      } catch (error) {
+        console.error('Error searching rationales:', error);
+      }
+    } else {
+      setNoResults(false);
+      setSuggestions([]);
+      fetchRationales(1);
+      setShowSeeMore(true);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion.Module);
+    setSuggestions([]);
+    setRationales([suggestion]);
+    setTotalPages(1);
+    setCurrentPage(1);
+    setShowSeeMore(false);
+    setNoResults(false);
+  };
+
+  const handleShowAllSuggestions = () => {
+    setShowAllSuggestions(true);
+  };
+
   return (
     <div className="container mx-auto p-4">
+      <div className="mb-4 relative">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search rationales..."
+          className="w-full border bg-[#15171a] text-white rounded-md outline-none border-none px-2 py-1"
+        />
+        {suggestions && (
+          <div ref={suggestionBoxRef} className={`absolute suggestionbox bg-[#15171a] ${suggestions.length > 0 ? 'border border-yellow-500' : ''} rounded-md mt-1 w-full z-10 max-h-48 overflow-y-auto`}>
+            {noResults && (
+              <div className="px-2 py-1 text-yellow-500">No results found.</div>
+            )}
+            {!noResults && suggestions.slice(0, showAllSuggestions ? suggestions.length : 5).map((suggestion) => (
+              <div
+                key={suggestion._id}
+                className="px-2 py-1 cursor-pointer hover:bg-[#252729] text-yellow-500"
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                {suggestion.RationaleText}
+              </div>
+            ))}
+            {!showAllSuggestions && suggestions.length > 5 && (
+              <div
+                className="px-2 py-1 cursor-pointer hover:bg-[#252729] text-yellow-500"
+                onClick={handleShowAllSuggestions}
+              >
+                Show More
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       <div className="hidden sm:block">
         <table className="min-w-full bg-[rgba(51,53,55,255)] rounded-xl">
           <thead>
@@ -68,13 +164,13 @@ function ShowRationales() {
               <th className="py-2 px-4 border-b bg-[#252729] font-bold text-yellow-500 border-yellow-500">Summary</th>
               <th className="py-2 px-4 border-b bg-[#252729] font-bold text-yellow-500 border-yellow-500 max-w-xs">Text</th>
               <th className="py-2 px-4 border-b bg-[#252729] rounded-tr-xl font-bold text-yellow-500 border-yellow-500">Actions</th>
-            </tr> 
+            </tr>
           </thead>
           <tbody>
             {rationales.map((rationale) => (
               <tr key={rationale._id}>
-                <td className="py-2 px-4  text-white">{rationale.Module}</td>
-                <td className="py-2 px-4  text-yellow-500">{rationale.RationaleSummary}</td>
+                <td className="py-2 px-4 text-white">{rationale.Module}</td>
+                <td className="py-2 px-4 text-yellow-500">{rationale.RationaleSummary}</td>
                 <td className="py-2 px-4 text-sm text-white max-w-xs">
                   <div className="overflow-hidden text-ellipsis">
                     {expandedRationale[rationale._id]
@@ -189,12 +285,15 @@ function ShowRationales() {
       )}
 
       <div className="mt-4 flex justify-center">
-        <button
-          className="py-2 px-4 bg-yellow-500 text-white rounded"
-          onClick={handleSeeMore}
-        >
-          See More
-        </button>
+        {showSeeMore && (
+          <button
+            className="py-2 px-4 bg-yellow-500 text-white rounded"
+            onClick={handleSeeMore}
+            disabled={currentPage >= totalPages}
+          >
+            See More
+          </button>
+        )}
       </div>
     </div>
   );
