@@ -26,6 +26,7 @@ function ShowUsers() {
 
   return (
     <div className="container mx-auto p-4">
+      {/* card for lg and xl */}
       <div className="hidden sm:block">
         <table className="min-w-full bg-[rgba(51,53,55,255)] rounded-xl">
           <thead>
@@ -44,7 +45,7 @@ function ShowUsers() {
           </tbody>
         </table>
       </div>
-
+      {/* card for sm and md */}
       <div className="block sm:hidden">
         {users.map((user) => (
           <div key={user._id} className="bg-[rgba(51,53,55,255)] rounded-xl p-4 mb-4">

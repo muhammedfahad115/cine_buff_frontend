@@ -2,6 +2,11 @@ import { createContext, useEffect, useState } from "react";
 
 const myContext = createContext();
 
+const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('activeTab');
+    window.location.reload();
+}
 function Context({ children }) {
     const [activeTab, setActiveTab] = useState('');
 
@@ -15,6 +20,7 @@ function Context({ children }) {
         localStorage.setItem('activeTab', activeTab);
     }, [ activeTab ])
 
+
     return (
         <>
             <myContext.Provider value={{ activeTab, setActiveTab }}>
@@ -23,6 +29,6 @@ function Context({ children }) {
         </>
     )
 }
-
+export { logout }
 export { myContext }
 export default Context
