@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import axiosInstance from '../../../Api/Axios';
 import './ShowRationale.css';
+import Spinner from '../../Spinner/Spinner';
 
 function ShowRationales() {
   const [rationales, setRationales] = useState([]);
@@ -11,8 +12,9 @@ function ShowRationales() {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
-  const [showSeeMore, setShowSeeMore] = useState(true);
+  const [showSeeMore, setShowSeeMore] = useState(null);
   const [noResults, setNoResults] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const suggestionBoxRef = useRef(null);
 
@@ -34,10 +36,13 @@ function ShowRationales() {
   }, []);
 
   const fetchRationales = async (page) => {
+    setLoading(true); // Start loading
     try {
       const response = await axiosInstance.get(`/getrationales?page=${page}&limit=10`);
       const newData = response.data.rationales;
-
+      if(newData.length > 0) {
+        setShowSeeMore(true)
+      }
       if (page === 1) {
         setRationales(newData);
       } else {
@@ -47,6 +52,7 @@ function ShowRationales() {
     } catch (error) {
       console.error('Error fetching rationales:', error);
     }
+    setLoading(false); // End loading
   };
 
   const handleEdit = (rationale) => {
@@ -167,33 +173,41 @@ function ShowRationales() {
             </tr>
           </thead>
           <tbody>
-            {rationales.map((rationale) => (
-              <tr key={rationale._id}>
-                <td className="py-2 px-4 text-white">{rationale.Module}</td>
-                <td className="py-2 px-4 text-yellow-500">{rationale.RationaleSummary}</td>
-                <td className="py-2 px-4 text-sm text-white max-w-xs">
-                  <div className="overflow-hidden text-ellipsis">
-                    {expandedRationale[rationale._id]
-                      ? rationale.RationaleText
-                      : truncateText(rationale.RationaleText, 100)}
-                  </div>
-                  <button
-                    className="ml-2 text-yellow-500"
-                    onClick={() => toggleExpand(rationale._id)}
-                  >
-                    {expandedRationale[rationale._id] ? 'See Less' : 'See More'}
-                  </button>
-                </td>
-                <td className="py-2 px-4">
-                  <button
-                    className="py-1 px-3 bg-[#292b2d] text-yellow-500 font-semibold rounded"
-                    onClick={() => handleEdit(rationale)}
-                  >
-                    Edit
-                  </button>
+            {loading ? (
+              <tr>
+                <td colSpan="4" className="text-center py-4">
+                  <Spinner width={'w-[25px]'}  />
                 </td>
               </tr>
-            ))}
+            ) : (
+              rationales.map((rationale) => (
+                <tr key={rationale._id}>
+                  <td className="py-2 px-4 text-white">{rationale.Module}</td>
+                  <td className="py-2 px-4 text-yellow-500">{rationale.RationaleSummary}</td>
+                  <td className="py-2 px-4 text-sm text-white max-w-xs">
+                    <div className="overflow-hidden text-ellipsis">
+                      {expandedRationale[rationale._id]
+                        ? rationale.RationaleText
+                        : truncateText(rationale.RationaleText, 100)}
+                    </div>
+                    <button
+                      className="ml-2 text-yellow-500"
+                      onClick={() => toggleExpand(rationale._id)}
+                    >
+                      {expandedRationale[rationale._id] ? 'See Less' : 'See More'}
+                    </button>
+                  </td>
+                  <td className="py-2 px-4">
+                    <button
+                      className="py-1 px-3 bg-[#292b2d] text-yellow-500 font-semibold rounded"
+                      onClick={() => handleEdit(rationale)}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

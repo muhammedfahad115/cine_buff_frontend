@@ -22,9 +22,9 @@ axiosInstance.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     if (error.response && error.response.status === 403) {
+        window.location.reload();
         console.log('Forbidden error:', error.response.data);
         localStorage.clear();
-        window.location.reload();
     }
     
     return Promise.reject(error);

@@ -1,0 +1,9 @@
+.phonenumber::-webkit-outer-spin-button,
+.phonenumber::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.phonenumber {
+  -moz-appearance: textfield;
+}
