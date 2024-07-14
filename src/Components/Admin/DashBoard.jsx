@@ -9,6 +9,7 @@ function DashBoard() {
             <Link to={'/admin/showusers'}><button className='active:text-red-500'>Show Users</button></Link>
             <Link to={'/admin/rationales'}><button className='active:text-red-500'>Show Rationales</button></Link>
             <Link to={'/admin/addbill'}><button className='active:text-red-500'>Add Bill</button></Link>
+            <Link to={'/admin/profile'}><button className='active:text-red-500'>Show Bills</button></Link>
         </div>
     </div>
     </>

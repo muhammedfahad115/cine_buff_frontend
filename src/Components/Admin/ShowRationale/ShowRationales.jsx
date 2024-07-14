@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import axiosInstance from '../../../Api/Axios';
 import './ShowRationale.css';
 import Spinner from '../../Spinner/Spinner';
+import { toast } from 'react-toastify';
 
 function ShowRationales() {
   const [rationales, setRationales] = useState([]);
@@ -64,7 +65,9 @@ function ShowRationales() {
       await axiosInstance.put(`/editrationales/${rationale._id}`, rationale);
       setEditingRationale(null);
       fetchRationales(1);
+      toast.success('Rationale updated successfully');
     } catch (error) {
+      toast.error('Failed to update rationale');
       console.error('Error saving rationale:', error);
     }
   };
