@@ -9,6 +9,7 @@ function BillStatus() {
   const [totalPages, setTotalPages] = useState(0);
   const [selectedBill, setSelectedBill] = useState(null);
 
+  // Fetch medical bills //
   useEffect(() => {
     const fetchMedicalBills = async () => {
       try {
@@ -28,14 +29,17 @@ function BillStatus() {
     fetchMedicalBills();
   }, [page]);
 
+  // function to Handle page change //
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
 
+  // View Rationale after clicking the view rationale button  //
   const handleViewRationale = (bill) => {
     setSelectedBill(bill);
   };
 
+  // function to close modal  //
   const closeModal = () => {
     setSelectedBill(null);
   };

@@ -20,6 +20,7 @@ function User() {
   const [showNoResults, setShowNoResults] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
+  // useefect to fetch medical bills with limit  //
   useEffect(() => {
     const getMedicalBills = async () => {
       try {
@@ -41,10 +42,12 @@ function User() {
     getMedicalBills();
   }, [page]);
 
+  // function to handle see more button click //
   const handleSeeMore = () => {
     setPage(page + 1);
   };
 
+  // function to handle deny button click //
   const handleDenyClick = async (bill) => {
     setSelectedBill(bill);
     setIsModalOpen(true);
@@ -66,6 +69,7 @@ function User() {
     }
   };
 
+  // function to close modal //
   const closeModal = () => {
     setIsModalOpen(false);
     setDenyReason("");
@@ -73,11 +77,13 @@ function User() {
     setSuggestions([]);
   };
 
+  // function to handle approve button click //
   const handleApprove = async (bill) => {
     setIsConfirmModalOpen(true);
     setSelectedBill(bill);
   };
 
+  // function to handle confirm approve button click //
   const handleConfirmApprove = async () => {
     try {
       const response = await axiosInstance.post("/approvebill", {
@@ -96,6 +102,7 @@ function User() {
     }
   };
 
+  // function to handle deny button click //
   const handleDeny = async () => {
     if (!denyReason.trim()) {
       toast.error("Please enter a reason for denial.");
@@ -117,6 +124,7 @@ function User() {
     }
   };
 
+  // function to handle search input change //
   const handleSearchInputChange = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
@@ -135,12 +143,14 @@ function User() {
     setShowNoResults(filteredSuggestions.length === 0 && value !== "");
   };
 
+  // function to handle suggestion click //
   const handleSuggestionClick = (suggestion) => {
     setSearchTerm(suggestion);
     setSuggestions([]);
     setDenyReason(suggestion);
   };
 
+  // function to toggle suggestion //
   const toggleSuggestion = (index) => {
     setExpandedSuggestions(prev => ({ ...prev, [index]: !prev[index] }));
   };

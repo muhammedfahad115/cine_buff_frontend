@@ -19,10 +19,12 @@ function ShowRationales() {
 
   const suggestionBoxRef = useRef(null);
 
+  // Fetch Rationales //
   useEffect(() => {
     fetchRationales(currentPage);
   }, [currentPage]);
 
+  // Handle Click Outside //
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (suggestionBoxRef.current && !suggestionBoxRef.current.contains(event.target)) {
@@ -36,6 +38,7 @@ function ShowRationales() {
     };
   }, []);
 
+  // Fetch Rationales Function //
   const fetchRationales = async (page) => {
     setLoading(true);
     try {
@@ -56,10 +59,12 @@ function ShowRationales() {
     setLoading(false);
   };
 
+  // Edit Rationale Function //
   const handleEdit = (rationale) => {
     setEditingRationale(rationale);
   };
 
+  // rationale update function //
   const handleSave = async (rationale) => {
     try {
       await axiosInstance.put(`/editrationales/${rationale._id}`, rationale);
@@ -72,10 +77,12 @@ function ShowRationales() {
     }
   };
 
+  // function for see more for pages  //
   const handleSeeMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
+  // function for expand button //
   const toggleExpand = (id) => {
     setExpandedRationale((prevState) => ({
       ...prevState,
@@ -83,11 +90,13 @@ function ShowRationales() {
     }));
   };
 
+  // function to show see more button //
   const truncateText = (text, limit) => {
     if (text.length <= limit) return text;
     return text.slice(0, limit) + '...';
   };
 
+  // Search Rationales Function //
   const handleSearchChange = async (e) => {
     const searchTerm = e.target.value;
     setSearchTerm(searchTerm);
@@ -115,6 +124,7 @@ function ShowRationales() {
     }
   };
 
+  // Handle Suggestion Click //
   const handleSuggestionClick = (suggestion) => {
     setSearchTerm(suggestion.Module);
     setSuggestions([]);
@@ -125,6 +135,7 @@ function ShowRationales() {
     setNoResults(false);
   };
 
+  // Handle Show All Suggestions //
   const handleShowAllSuggestions = () => {
     setShowAllSuggestions(true);
   };

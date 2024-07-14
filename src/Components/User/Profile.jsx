@@ -5,16 +5,16 @@ import Spinner from '../Spinner/Spinner';
 function Profile() {
   const [userDetails, setUserDetails] = useState(null);
 
+  // Get User Details to show in profile //
   useEffect(()=>{
     const getUserDetails = async ()=>{
      try {
       const response = await axiosInstance.get('/profile');
-      // console.log(response.data);
       if (response.status === 200) {
         setUserDetails(response.data.user);
       }
      } catch (error) {
-      // console.log(error);
+      console.log(error);
      }
     }
     getUserDetails();

@@ -5,13 +5,15 @@ const myContext = createContext();
 
 function Context({ children }) {
     const [activeTab, setActiveTab] = useState('');
-
+    // useefect to get active tab based on url pathname //
     useEffect(() => {
         const storedActiveTab = localStorage.getItem('activeTab');
         if (storedActiveTab) {
             setActiveTab(storedActiveTab);
         }
     }, []);
+
+    // useefect to store active tab based on url pathname //
     useEffect(() => {
         localStorage.setItem('activeTab', activeTab);
     }, [ activeTab ])

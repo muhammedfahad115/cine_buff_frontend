@@ -7,7 +7,7 @@ function Tabs() {
     const location = useLocation();
     const {activeTab, setActiveTab} = useContext(myContext);
   
-  
+  // useeffect to set active tab based on url pathname //
     useEffect(() => {
       if (location.pathname === '/admin') {
         setActiveTab('admin');

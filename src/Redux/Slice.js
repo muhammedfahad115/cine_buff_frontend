@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// created slice for auth token in redux store //
 const slice = createSlice({
   name: "auth",
   initialState: {

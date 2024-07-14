@@ -3,6 +3,8 @@ const axiosInstance = axios.create({
     baseURL: 'http://localhost:5000',
 })
 
+// Interceptors to add token to request in header for every request //
+
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem('token')
     if (token) {
@@ -12,6 +14,9 @@ axiosInstance.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error)
 })
+
+// Interceptors to catch 403 error and reload page //
+
 axiosInstance.interceptors.response.use((response) => {
         if (response.status === 403) {
         console.log('Forbidden: ', response.data);

@@ -4,6 +4,7 @@ import axiosInstance from '../../Api/Axios';
 import { toast } from 'react-toastify';
 
 function AddRationales() {
+  // formik form for adding rationales to the database //
   const formik = useFormik({
     initialValues: {
       rationale: '',

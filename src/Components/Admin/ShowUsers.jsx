@@ -8,10 +8,12 @@ function ShowUsers() {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  // Fetch Users //
   useEffect(() => {
     fetchUsers(currentPage);
   }, [currentPage]);
 
+  // function to fetch users //
   const fetchUsers = async (page) => {
     setLoading(true);
     try {

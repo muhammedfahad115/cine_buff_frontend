@@ -10,6 +10,7 @@ function Auth() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
 
+    // useEffect for checking if token is available or not if not then redirect to login //
     useEffect(() => {
         const checkToken = async () => {
             if (!reduxToken) {

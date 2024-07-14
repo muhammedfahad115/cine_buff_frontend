@@ -8,6 +8,7 @@ import './AddMedicalBill.css';
 function AddMedicalBill() {
     const [specialtyCodes, setSpecialtyCodes] = useState([]);
 
+    // useeffect to fetch specialty codes //
     useEffect(() => {
         const fetchSpecialtyCodes = async () => {
             try {
@@ -24,6 +25,7 @@ function AddMedicalBill() {
         fetchSpecialtyCodes();
     }, []);
 
+    // formik form for adding medical bill //
     const formik = useFormik({
         initialValues: {
             patientName: '',
