@@ -36,7 +36,7 @@ function ShowRationales() {
   }, []);
 
   const fetchRationales = async (page) => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const response = await axiosInstance.get(`/getrationales?page=${page}&limit=10`);
       const newData = response.data.rationales;
@@ -52,7 +52,7 @@ function ShowRationales() {
     } catch (error) {
       console.error('Error fetching rationales:', error);
     }
-    setLoading(false); // End loading
+    setLoading(false);
   };
 
   const handleEdit = (rationale) => {
