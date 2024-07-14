@@ -21,7 +21,7 @@ function ShowUsers() {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching users:', error);
-      setLoading(false); // Ensure loading state is set to false on error
+      setLoading(false); 
     }
   };
 
@@ -31,7 +31,6 @@ function ShowUsers() {
 
   return (
     <div className="container mx-auto p-4">
-      {/* Table for lg and xl screens */}
       <div className="hidden sm:block">
         <table className="min-w-full bg-[rgba(51,53,55,255)] rounded-xl">
           <thead>
@@ -59,7 +58,6 @@ function ShowUsers() {
         </table>
       </div>
 
-      {/* Cards for sm and md screens */}
       <div className="block sm:hidden">
         {loading ? (
           <div className="text-center py-4">
@@ -77,7 +75,6 @@ function ShowUsers() {
         )}
       </div>
 
-      {/* Pagination */}
       <div className="mt-4 flex justify-center">
         {Array.from({ length: totalPages }, (_, index) => (
           <button

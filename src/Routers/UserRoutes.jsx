@@ -11,6 +11,7 @@ import AddRationales from '../Components/Admin/AddRationales'
 import ShowUsers from '../Components/Admin/ShowUsers'
 import ShowRationales from '../Components/Admin/ShowRationale/ShowRationales'
 import AddMedicalBill from '../Components/Admin/AddMedicalBill/AddMedicalBill'
+import BillStatus from '../Components/Admin/BillStatus'
 
 function UserRoutes() {
   return (
@@ -27,6 +28,7 @@ function UserRoutes() {
                 <Route path='showusers' element={<ShowUsers />}></Route>
                 <Route path='rationales' element={<ShowRationales />}></Route>
                 <Route path='addbill' element={<AddMedicalBill />}></Route>
+                <Route path='billstatus' element={<BillStatus />}></Route>
               </Route>
               <Route path='profile' element={<Profile />}></Route>
             </Route>

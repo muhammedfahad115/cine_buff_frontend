@@ -18,7 +18,7 @@ function User() {
   const [expandedSuggestions, setExpandedSuggestions] = useState({});
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const [showNoResults, setShowNoResults] = useState(false);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false); // State for confirmation modal
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const getMedicalBills = async () => {
@@ -73,8 +73,9 @@ function User() {
     setSuggestions([]);
   };
 
-  const handleApprove = async () => {
+  const handleApprove = async (bill) => {
     setIsConfirmModalOpen(true);
+    setSelectedBill(bill);
   };
 
   const handleConfirmApprove = async () => {
@@ -84,6 +85,8 @@ function User() {
       })
       if(response.status === 200) {
         toast.success(`Approved ${selectedBill.patientName}'s medical bill`);
+        console.log(selectedBill)
+        setMedicalBills(prevBills => prevBills.filter(bill => bill._id !== selectedBill._id));
       }
     } catch (error) {
       console.error("Error approving bill:", error);
@@ -99,11 +102,13 @@ function User() {
       return;
     }
     try {
-      const response = await axiosInstance.post("/denybill", {
+      const response = await axiosInstance.post("/confirmdenybill", {
         billId: selectedBill._id,
         denyReason: denyReason,
       })
       toast.error(`Denied ${selectedBill.patientName}'s medical bill`);
+      console.log(selectedBill)
+      setMedicalBills(prevBills => prevBills.filter(bill => bill._id !== selectedBill._id));
     } catch (error) {
       console.error("Error denying bill:", error);
     } finally {
@@ -141,36 +146,36 @@ function User() {
   };
 
   return (
-    <div className="h-screen">
+    <div className="min-h-screen">
       {loading ? (
         <div className="h-96 flex items-center justify-center">
           <Spinner width={'w-[25px]'} />
         </div>
       ) : medicalBills.length > 0 ? (
-        <div className="container mx-auto p-4 bg-[#1d1e20] rounded-lg">
+        <div className="container mx-auto p-4  rounded-lg">
           <div className="flex flex-col gap-6">
             {medicalBills.map((bill, index) => (
-              <div key={index} className=" bg-[#252729] shadow-md rounded-md p-4">
+              <div key={index} className=" bg-[#252729] shadow-lg rounded-md p-4">
                 <div className="flex flex-col gap-4">
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center">PatientName: <p className="text-sm sm:text-base">{bill.patientName}</p></h1>
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center ">DoctorName: <p className="text-sm sm:text-base">{bill.doctorName}</p></h1>
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center ">Date: <p className="text-sm sm:text-base">{bill.dateOfService}</p></h1>
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center ">ProcedureCode: <p className="text-sm sm:text-base">{bill.procedureCode}</p></h1>
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center ">ProcedureDescription: <p className="text-sm sm:text-base">{bill.procedureDescription}</p></h1>
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center ">Cost: <p className="text-sm sm:text-base">{bill.cost}</p></h1>
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center ">SpecialtyCode: <p className="text-sm sm:text-base">{bill.specialtyCode}</p></h1>
-                  <h1 className="text-yellow-500 font-semibold flex gap-2 items-center ">PhoneNumber: <p className="text-sm sm:text-base">{bill.phoneNumber}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center">PatientName: <p className="text-sm text-white sm:text-base">{bill.patientName}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center ">DoctorName: <p className="text-sm text-white sm:text-base">{bill.doctorName}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center ">Date: <p className="text-sm text-white sm:text-base">{bill.dateOfService}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center ">ProcedureCode: <p className="text-sm text-white sm:text-base">{bill.procedureCode}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center ">ProcedureDescription: <p className="text-sm text-white sm:text-base">{bill.procedureDescription}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center ">Cost: <p className="text-sm text-white sm:text-base">{bill.cost}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center ">SpecialtyCode: <p className="text-sm text-white sm:text-base">{bill.specialtyCode}</p></h1>
+                  <h1 className="text-yellow-500  flex gap-2 items-center ">PhoneNumber: <p className="text-sm text-white sm:text-base">{bill.phoneNumber}</p></h1>
                 </div>
 
                 <div className="flex justify-end mt-4">
                   <button
-                    className="bg-green-500 text-white px-4 py-2 rounded-md mr-2"
-                    onClick={handleApprove}
+                    className="bg-black text-yellow-500 font-semibold px-4 py-2 rounded-md mr-2"
+                    onClick={() => handleApprove(bill)}
                   >
                     Approve
                   </button>
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    className="bg-red-500 text-white px-4 py-2 font-semibold rounded-md"
                     onClick={() => handleDenyClick(bill)}
                   >
                     Deny
@@ -182,7 +187,7 @@ function User() {
           {page < totalPages && (
             <div className="flex justify-center mt-4">
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                className="bg-blue-500  text-white px-4 py-2 rounded-md"
                 onClick={handleSeeMore}
               >
                 See More
@@ -218,7 +223,7 @@ function User() {
                           </div>
                           <button
                             onClick={() => toggleSuggestion(index)}
-                            className="text-[#3182ce] underline mb-2 cursor-pointer"
+                            className="text-[#ffffff] text-sm ml-2 underline mb-2 cursor-pointer"
                           >
                             {expandedSuggestions[index] ? "Show Less" : "Show More"}
                           </button>
